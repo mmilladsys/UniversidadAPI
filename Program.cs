@@ -2,6 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using UniversidadAPI;
 
 var builder = WebApplication.CreateBuilder(args);
+IConfiguration configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .Build();
 
 // Add services to the container.
 
@@ -11,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // DB CONTEXTs.
 builder.Services.AddDbContext<DBConnection>(options =>
-     options.UseOracle("DATA SOURCE=localhost:1521/xe;PASSWORD=matiymilla;USER ID=system;"));
+     options.UseOracle("DATA SOURCE="+configuration.GetConnectionString("Data Source")+";PASSWORD="+ configuration.GetConnectionString("Password") + ";USER ID="+ configuration.GetConnectionString("User ID") + ";"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
